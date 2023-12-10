@@ -1,23 +1,17 @@
 import { useDispatch, useSelector } from 'react-redux';
 import ContactsListStyled from './ContactList.styled';
 
-import { deleteContact, getContacts } from 'redux/contactsSlice';
-import { getFilter } from 'redux/filterSlice';
-
-const findContacts = (contacts, filter) => {
-  const formatedFilter = filter.toLowerCase();
-
-  return contacts.filter(({ name }) =>
-    name.toLowerCase().includes(formatedFilter)
-  );
-};
+import { selectfindedContacts } from 'redux/selectors';
+import { useEffect } from 'react';
+import { deleteContact, fetchContacts } from 'redux/operations';
 
 export const ContactList = () => {
-  const contacts = useSelector(getContacts);
-  const filter = useSelector(getFilter);
   const dispatch = useDispatch();
+  const findedContacts = useSelector(selectfindedContacts);
 
-  const findedContacts = findContacts(contacts, filter);
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const contactsList = findedContacts.map(({ name, id, number }) => (
     <li key={id}>
